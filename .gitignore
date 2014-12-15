@@ -5,3 +5,4 @@ proj.linux/*
 proj.win32/*
 proj.wp8-xaml/*
 !.gitignore
+.bak
