@@ -1,10 +1,12 @@
 #include "GameScene.h"
 
-GameScene* GameScene::create(const Color4B& color)
+GameScene* GameScene::create(const Color4B& color,PhysicsWorld *_world)
 {
 		GameScene *pRet = new GameScene();
+		pRet->world = _world;
 		if (pRet && pRet->initWithColor(color))
 		{
+			pRet->setName("GameScene");		
 			pRet->autorelease();
 			return pRet;
 		}
@@ -18,13 +20,10 @@ GameScene* GameScene::create(const Color4B& color)
 
 Scene* GameScene::createScene(const Color4B& color)
 {
-	scene = Scene::createWithPhysics();
+	auto scene = Scene::createWithPhysics();
 	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-	scene->getPhysicsWorld()->setGravity(Vect(0,0));
-	scene->getPhysicsWorld()->setSpeed(0.1);
-	//scene->getPhysicsWorld()->setUpdateRate(1.0);
-	//auto scene = Scene::create();
-	auto lay = GameScene::create(color);
+	scene->getPhysicsWorld()->setSpeed(0.3);
+	auto lay = GameScene::create(color,scene->getPhysicsWorld());
 	scene->addChild(lay,0);//lay - 0
 	return scene;
 }
@@ -34,7 +33,6 @@ bool GameScene::initWithColor(const Color4B& color)
 	LayerColor::initWithColor(color);
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
-
 	addbackground();
 	paramInit();//init the param
 	
@@ -48,6 +46,10 @@ bool GameScene::initWithColor(const Color4B& color)
 
 /*void GameScene::update(float dt)
 {
+	for (int i = 0; i < 4;i++)
+	{
+		;
+	}
 }*/
 
 void GameScene::paramInit()
@@ -64,7 +66,6 @@ void GameScene::paramInit()
 	block_init_des[1] = Vect(-320,-320);
 	block_init_des[2] = Vect(320,320);
 	block_init_des[3] = Vect(-320,320);
-
 }
 void GameScene::addbackground()
 {
@@ -76,7 +77,7 @@ void GameScene::addbackground()
 
 void GameScene::addEdges()
 {
-	edge = PhysicsBody::createEdgeBox(Size(visibleSize.height, visibleSize.height), PhysicsMaterial(0.1f,1.0f,0.0f), 0.5f);
+	edge = PhysicsBody::createEdgeBox(Size(visibleSize.height + 10, visibleSize.height), PhysicsMaterial(0.1f,1.0f,0.0f), 0.5f);
 	auto node = Node::create();                                    //ÃÜ¶È0.1  »Ø¸´Á¦  Ä¦²Á0
 	node->setPhysicsBody(edge);
 	node->setPosition(Vec2(visibleSize.height/2,visibleSize.height/2));
@@ -87,7 +88,16 @@ void GameScene::addControlBlock()
 {
 	rocker = Sprite::create(squ);
 	rocker->setPosition(Vec2(visibleSize.height/2,visibleSize.height/2));
+	//rocker->setPhysicsBody(PhysicsBody::createBox(rocker->getContentSize(), PhysicsMaterial(0, 1.0f, 0.0f), Vec2(0.5f, 0.5f)));
 	this->addChild(rocker, 2);//control - 2
+	/*rocker->getPhysicsBody()->setCategoryBitmask(0x01);//0x01
+	rocker->getPhysicsBody()->setContactTestBitmask(0x0f);//0x01 0x02 0x04 0x08
+	rocker->getPhysicsBody()->setCollisionBitmask(0x10);//0x10*/
+	//
+	/*block[i]->getPhysicsBody()->setCategoryBitmask(0x01);
+	block[i]->getPhysicsBody()->setContactTestBitmask(mess);
+	mess <<= 1;//0xff
+	block[i]->getPhysicsBody()->setCollisionBitmask(0x10);*/
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [this](Touch*t, Event *e){
@@ -99,8 +109,6 @@ void GameScene::addControlBlock()
 	};
 	listener->onTouchMoved = [this](Touch *t, Event *e){
 		rocker->setPosition(t->getLocation());
-		//if (rocker->getBoundingBox().containsPoint(t->getLocation()))
-		//{
 			if (rocker->getBoundingBox().getMinX() <= bac->getBoundingBox().getMinX())
 			{
 				touchEdge = true;
@@ -124,7 +132,6 @@ void GameScene::addControlBlock()
 				//handle err code
 				touchEdge = false;
 			}
-		//}
 	};
 	listener->onTouchEnded = [this](Touch*,Event*)
 	{ touchcontrol = false; };
@@ -133,6 +140,7 @@ void GameScene::addControlBlock()
 
 void GameScene::addblocks()
 {
+	int mess = 0x01;
 	for (int i = 0; i < 4; i++)
 	{
 		block[i] = Sprite::create(StringUtils::format("block\\block_%d.png",i+1).c_str());
@@ -140,5 +148,12 @@ void GameScene::addblocks()
 		this->addChild(block[i], 2);//block - 2
 		block[i]->setPosition(block_init_pos[i]);
 		block[i]->getPhysicsBody()->setVelocity(block_init_des[i]);
+		//block[i]->setName(StringUtils::format("block%d", i));
+		block[i]->getPhysicsBody()->setCategoryBitmask(0x01);
+		block[i]->getPhysicsBody()->setContactTestBitmask(mess);
+		mess<<=1;//0x01 0x02 0x04 0x08
+		block[i]->getPhysicsBody()->setCollisionBitmask(0x10);
+	
 	}
+	//this->world->setSpeed(1);
 }

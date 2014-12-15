@@ -14,21 +14,23 @@ public:
 	static Scene *createScene(const Color4B& color);//scene
 
 	//CREATE_FUNC(GameScene);
-	static GameScene* create(const Color4B& color);//layer
+	static GameScene* create(const Color4B& color, PhysicsWorld *_world);//layer
 	
 	void paramInit();
 	void addbackground();
 	void addEdges();
 	void addblocks();
 	void addControlBlock();
-	
+	void setPhyWorld(PhysicsWorld *_world);
 	//virtual void update(float dt);
+
 private:
-	static Scene *scene;
+	static Scene *sce;
 	Size visibleSize;
 	Vec2 origin;
 	Sprite *bac;
 	PhysicsBody *edge;
+	PhysicsWorld*world;
 
 	Sprite *rocker;//control
 	Sprite*block[4];
