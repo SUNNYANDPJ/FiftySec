@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "MyRes.h"
+#include "End.h"
 USING_NS_CC;
 
 class GameScene:public LayerColor
@@ -22,10 +23,10 @@ public:
 	void addblocks();
 	void addControlBlock();
 	void setPhyWorld(PhysicsWorld *_world);
-	//virtual void update(float dt);
+	void addGradelabel();
+	virtual void update(float dt);
 
 private:
-	static Scene *sce;
 	Size visibleSize;
 	Vec2 origin;
 	Sprite *bac;
@@ -40,7 +41,11 @@ private:
 	bool touchEdge;
 	bool touchcontrol;
 
-	//EventListenerTouchOneByOne *listener_mainblock;
+	struct timeval nowTimeval;
+	long sec_start;
+	long sec_end;
+	long grade;
+	LabelTTF *label_grade;
 };
 
 #endif

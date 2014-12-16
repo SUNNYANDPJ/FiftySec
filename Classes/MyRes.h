@@ -3,6 +3,7 @@
 
 #define  offset  35
 
+#define bac_end "block\\bac_end.png"
 
 #define background "block\\bac_1.png"
 
