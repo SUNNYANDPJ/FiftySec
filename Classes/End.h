@@ -8,15 +8,18 @@ USING_NS_CC;
 class End : public Layer
 {
 public:
-	static Scene *createScene();
+	static Scene *createScene(int grade);
 	virtual bool init();
-	CREATE_FUNC(End);
+	//CREATE_FUNC(End);
+	static End* create(int grade);
 	void addBac();
 	void addLabel();
+	void addGrade();
 private:
 	Size visibleSize;
 	Vec2 origin;
 	Sprite *bac;
 	LabelTTF *label;
+	int grade;
 };
 #endif

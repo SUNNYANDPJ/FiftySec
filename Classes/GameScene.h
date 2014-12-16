@@ -24,6 +24,7 @@ public:
 	void addControlBlock();
 	void setPhyWorld(PhysicsWorld *_world);
 	void addGradelabel();
+	int getcurtime();
 	virtual void update(float dt);
 
 private:
@@ -38,13 +39,14 @@ private:
 	Vec2 block_init_pos[4];
 	Vect  block_init_des[4];
 
-	bool touchEdge;
-	bool touchcontrol;
+	//bool touchEdge;
+	//bool firstTouchControl;
 
-	struct timeval nowTimeval;
-	long sec_start;
-	long sec_end;
-	long grade;
+	int count;
+	bool isGameStart;
+	int sec_start;
+	int sec_end;
+	int grade;
 	LabelTTF *label_grade;
 };
 
