@@ -1,7 +1,16 @@
 #ifndef __MYRES_H__
 #define __MYRES_H__
 
-#define  offset  35
+#define level0Speed 0.3
+#define level1Speed 0.5
+#define level2Speed 0.7
+#define level3Speed 0.9
+#define level4Speed 1.1
+#define level5Speed 1.3
+
+#define GodSpeed  2
+
+#define  offset  45
 
 #define bac_end "block\\bac_end.png"
 

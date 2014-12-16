@@ -53,7 +53,7 @@ void End::addLabel()
 void End::addGrade()
 {
 	auto label_grade = LabelTTF::create(StringUtils::format("%d",grade),"verdana",30);
-	label_grade->setPosition(Vec2(visibleSize.width / 2 + label_grade->getContentSize().width / 2,visibleSize.height / 2));
+	label_grade->setPosition(Vec2(visibleSize.width / 2 +30+ label_grade->getContentSize().width / 2,visibleSize.height / 2));
 	this->addChild(label_grade,2);//grade done
 
 	auto label_msg = LabelTTF::create("Score:", "verdana", 30);

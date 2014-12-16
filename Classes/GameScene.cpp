@@ -23,7 +23,7 @@ Scene* GameScene::createScene(const Color4B& color)
 	auto scene = Scene::createWithPhysics();
 	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0,0));
-	scene->getPhysicsWorld()->setSpeed(0.3);
+	scene->getPhysicsWorld()->setSpeed(level0Speed);
 	auto lay = GameScene::create(color,scene->getPhysicsWorld());
 	scene->addChild(lay,0);//lay - 0
 	return scene;
@@ -92,6 +92,29 @@ void GameScene::update(float dt)
 	if (isGameStart)
 	{
 		grade = getcurtime() - sec_start;
+		if (grade >= 10)
+		{
+			world->setSpeed(level1Speed);
+		}
+		else if (grade >= 20)
+		{
+			world->setSpeed(level2Speed);
+		}
+		else if (grade >= 30)
+		{
+			world->setSpeed(level3Speed);
+		}
+		else if (grade >= 40)
+		{
+			world->setSpeed(level4Speed);
+		}
+		else if (grade >= 50)
+		{
+			world->setSpeed(level5Speed);
+		}
+		else if (grade >=70)
+			world->setSpeed(GodSpeed);
+			
 		label_grade->setString(StringUtils::format("%d", grade));
 	}
 			
@@ -102,6 +125,7 @@ void GameScene::paramInit()
 	auto bac_pos = bac->getBoundingBox();
 	count = 0;
 	isGameStart = false;
+	grade = 0;
 	block_init_pos[0] = Vec2(bac_pos.getMinX()+offset, bac_pos.getMaxY()-offset);
 	block_init_pos[1] = Vec2(bac_pos.getMaxX()-offset, bac_pos.getMaxY()-offset);
 	block_init_pos[2] = Vec2(bac_pos.getMinX()+offset,bac_pos.getMinY()+offset);

@@ -39,13 +39,10 @@ private:
 	Vec2 block_init_pos[4];
 	Vect  block_init_des[4];
 
-	//bool touchEdge;
-	//bool firstTouchControl;
-
 	int count;
 	bool isGameStart;
 	int sec_start;
-	int sec_end;
+	//int sec_end;
 	int grade;
 	LabelTTF *label_grade;
 };
