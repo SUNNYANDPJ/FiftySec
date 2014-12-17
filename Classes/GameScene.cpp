@@ -151,7 +151,7 @@ void GameScene::addGradelabel()
 	label_grade->setFontName("verdana");
 	label_grade->setFontSize(40);
 	label_grade->setString("0");
-	label_grade->setPosition(Vec2(visibleSize.width/2,visibleSize.height / 2));
+	label_grade->setPosition(Vec2(visibleSize.width/2,visibleSize.height *3 / 4));
 	this->addChild(label_grade,4);
 }
 void GameScene::addEdges()

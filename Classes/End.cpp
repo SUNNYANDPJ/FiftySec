@@ -1,4 +1,5 @@
 #include "End.h"
+#include "GameScene.h"
 
 Scene *End::createScene(int grade)
 {
@@ -33,30 +34,69 @@ bool End::init()
 	addBac();
 	addLabel();
 	addGrade();
+
+	auto tryagain= MenuItemImage::create(startnormal, startselected, CC_CALLBACK_1(End::gameagain, this));
+	//auto label_start = LabelTTF::create("StartGame", "verdana", 20);
+	auto label_start = Label::create("TryAgain", "verdana", 20, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
+	label_start->setAnchorPoint(Point(0.5, 0.5));
+	this->addChild(label_start, 1);
+	auto menustart = Menu::create(tryagain, NULL);
+	menustart->setPosition(Vec2(visibleSize.width / 4, visibleSize.height / 3));
+	this->addChild(menustart);
+	label_start->setPosition(Vec2(visibleSize.width / 4, visibleSize.height / 3));
+
+
+	auto endgame = MenuItemImage::create(endnormal, endselected, CC_CALLBACK_1(End::gameover, this));
+	auto label_end = Label::create("ExitGame", "verdana", 20, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
+	label_end->setAnchorPoint(Point(0.5, 0.5));
+	this->addChild(label_end, 1);
+	auto menuend = Menu::create(endgame, NULL);
+	menuend->setPosition(Vec2(visibleSize.width *3 / 4, visibleSize.height / 3));
+	this->addChild(menuend);
+	label_end->setPosition(Vec2(visibleSize.width * 3 / 4, visibleSize.height / 3));
+
 	return true;
+}
+
+void End::gameover(Ref *pSender)
+{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+	return;
+#endif
+
+	Director::getInstance()->end();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+	exit(0);
+#endif
+}
+
+void End::gameagain(Ref *pSender)
+{
+	Director::getInstance()->replaceScene(GameScene::createScene(Color4B::GRAY));
 }
 
 void End::addBac()
 {
 	bac = Sprite::create(bac_end);
 	bac->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
-	this->addChild(bac,1);
+	this->addChild(bac);
 }
 
 void End::addLabel()
 {
 	label = LabelTTF::create("Game Over","verdana",30);
 	label->setPosition(Vec2(visibleSize.width / 2,visibleSize.height *3/4 ));
-	this->addChild(label,2);
+	this->addChild(label,1);
 }
 
 void End::addGrade()
 {
 	auto label_grade = LabelTTF::create(StringUtils::format("%d",grade),"verdana",30);
 	label_grade->setPosition(Vec2(visibleSize.width / 2 +30+ label_grade->getContentSize().width / 2,visibleSize.height / 2));
-	this->addChild(label_grade,2);//grade done
+	this->addChild(label_grade,1);//grade done
 
 	auto label_msg = LabelTTF::create("Score:", "verdana", 30);
 	label_msg->setPosition(Vec2(visibleSize.width / 2-label_msg->getContentSize().width / 2,visibleSize.height / 2));
-	this->addChild(label_msg,2);
+	this->addChild(label_msg,1);
 }

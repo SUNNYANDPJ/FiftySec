@@ -15,6 +15,9 @@ public:
 	void addBac();
 	void addLabel();
 	void addGrade();
+
+	void gameagain(Ref *pSender);
+	void gameover(Ref *pSender);
 private:
 	Size visibleSize;
 	Vec2 origin;
