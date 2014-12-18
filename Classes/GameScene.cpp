@@ -24,7 +24,9 @@ Scene* GameScene::createScene(const Color4B& color)
 	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0,0));
 	scene->getPhysicsWorld()->setSpeed(level0Speed);
+	//scene->getPhysicsBody()->setRotationEnable(false);
 	auto lay = GameScene::create(color,scene->getPhysicsWorld());
+	log("lay done  29");
 	scene->addChild(lay,0);//lay - 0
 	return scene;
 }
@@ -62,7 +64,7 @@ int GameScene::getcurtime()
 	return (min*60 + sec);
 #endif
 
-#if(CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) 
+#if(CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WP8) 
 	struct tm *tm;
 	time_t timep;
 	time(&timep);
@@ -84,7 +86,6 @@ void GameScene::update(float dt)
 		auto bbdx = block[i]->getBoundingBox();
 		if (bbdx.containsPoint(Vec2(bdx.getMinX(), bdx.getMinY())) || bbdx.containsPoint(Vec2(bdx.getMinX(), bdx.getMaxY()))||bbdx.containsPoint(Vec2(bdx.getMaxX(),bdx.getMinY()))||bbdx.containsPoint(Vec2(bdx.getMaxX(),bdx.getMaxY())))
 		{
-			log("Touched");
 			isGameStart = false;
 			Director::getInstance()->replaceScene(End::createScene(grade));
 		}
@@ -130,18 +131,21 @@ void GameScene::paramInit()
 	block_init_pos[1] = Vec2(bac_pos.getMaxX()-offset, bac_pos.getMaxY()-offset);
 	block_init_pos[2] = Vec2(bac_pos.getMinX()+offset,bac_pos.getMinY()+offset);
 	block_init_pos[3] = Vec2(bac_pos.getMaxX()-offset,bac_pos.getMinY()+offset);
-
-	block_init_des[0] = Vect(480, -320);
-	block_init_des[1] = Vect(-480,-320);
-	block_init_des[2] = Vect(480,320);
-	block_init_des[3] = Vect(-480,320);
+	auto w = visibleSize.width;
+	auto h = visibleSize.height;
+	block_init_des[0] = Vect(w, -h);
+	block_init_des[1] = Vect(-w,-h);
+	block_init_des[2] = Vect(w,h);
+	block_init_des[3] = Vect(-w,h);
 
 }
 void GameScene::addbackground()
 {
 	bac = Sprite::create(background);
-	bac->setAnchorPoint(Vec2(0, 0));
-	bac->setPosition(Vec2(origin.x + (visibleSize.height - bac->getContentSize().height) / 2, origin.y + (visibleSize.height - bac->getContentSize().height) / 2));
+	bac->setAnchorPoint(Vec2(0.5, 0.5));
+	bac->setScaleX(visibleSize.width / bac->getContentSize().width);
+	bac->setScaleY(visibleSize.height / bac->getContentSize().height);
+	bac->setPosition(Vec2(visibleSize.width / 2,visibleSize.height / 2));
 	this->addChild(bac, 1);
 }
 
@@ -152,6 +156,7 @@ void GameScene::addGradelabel()
 	label_grade->setFontSize(40);
 	label_grade->setString("0");
 	label_grade->setPosition(Vec2(visibleSize.width/2,visibleSize.height *3 / 4));
+	label_grade->setScale(visibleSize.width / label_grade->getContentSize().width/30);
 	this->addChild(label_grade,4);
 }
 void GameScene::addEdges()
@@ -167,6 +172,7 @@ void GameScene::addControlBlock()
 {
 	rocker = Sprite::create(squ);
 	rocker->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
+	rocker->setScale(visibleSize.width / rocker->getContentSize().width / 13);
 	this->addChild(rocker, 2);//control - 2
 
 	auto listener = EventListenerTouchOneByOne::create();
@@ -199,9 +205,6 @@ void GameScene::addControlBlock()
 				Director::getInstance()->replaceScene(End::createScene(grade));
 			}
 	};
-	/*listener->onTouchEnded = [this](Touch*, Event*)
-	{ 
-	};*/
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, rocker);
 }
 
@@ -210,9 +213,18 @@ void GameScene::addblocks()
 	int mess = 0x01;
 	for (int i = 0; i < 4; i++)
 	{
-		block[i] = Sprite::create(StringUtils::format("block\\block_%d.png",i+1).c_str());
+		if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
+		{
+			block[i] = Sprite::create(StringUtils::format("block\\block_%d.png", i + 1).c_str());
+		}
+		else if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+		{
+			block[i] = Sprite::create(StringUtils::format("block/block_%d.png", i + 1).c_str());
+		}
+		block[i]->setScale(visibleSize.width / block[i]->getContentSize().width / 13);
 		block[i]->setPhysicsBody(PhysicsBody::createBox(block[i]->getContentSize(), PhysicsMaterial(0,1.0f,0.0f), Vec2(0.5f,0.5f)));
 		this->addChild(block[i], 2);
+		block[i]->getPhysicsBody()->setRotationEnable(false);
 		block[i]->setPosition(block_init_pos[i]);
 		block[i]->getPhysicsBody()->setCategoryBitmask(0x01);
 		block[i]->getPhysicsBody()->setContactTestBitmask(mess);

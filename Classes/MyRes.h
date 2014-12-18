@@ -10,27 +10,30 @@
 
 #define GodSpeed  1.5
 
-#define  offset  45
+#define  offset  70
 
-#define bac_start "block\\bacStart.png"
+#define bac_start "block/bacStart.png"
 
-#define bac_end "block\\bac_end.png"
+#define bac_end "block/bac_end.png"
 
-#define background "block\\bac_1.png"
+#define background "block/bac_1.png"
 
-#define block_1 "block\\block_1.png"
-#define block_2 "block\\block_2.png"
-#define block_3 "block\\block_3.png"
-#define block_4 "block\\block_4.png"
+#define block_1 "block/block_1.png"
 
-#define squ "block\\squ.png"
+#define block_2 "block/block_2.png"
 
-#define startselected "button\\startselected.png"
-#define startnormal   "button\\startnormal.png"
+#define block_3 "block/block_3.png"
 
-#define endselected "button\\endselected.png"
-#define endnormal   "button\\endnormal.png"
+#define block_4 "block/block_4.png"
 
-#define onormal      "button\\onormal.png"
-#define oselected     "button\\oselected.png"
+#define squ "block/squ.png"
+
+#define startselected "button/startselected.png"
+#define startnormal   "button/startnormal.png"
+
+#define endselected "button/endselected.png"
+#define endnormal   "button/endnormal.png"
+
+#define onormal      "button/onormal.png"
+#define oselected     "button/oselected.png"
 #endif
